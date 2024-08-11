@@ -67,7 +67,7 @@ async function Navbar() {
 
           <section>
             <Input
-                placeholder={'Search'}
+                placeholder={'Search your favorite store'}
                 type={'search'}
             />
 

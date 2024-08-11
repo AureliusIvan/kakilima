@@ -5,6 +5,13 @@ import Link from "next/link";
 import {cn} from "@/lib/utils";
 import {Card, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
 import Image from "next/image";
+import {
+  Pagination,
+  PaginationContent, PaginationEllipsis,
+  PaginationItem,
+  PaginationLink, PaginationNext,
+  PaginationPrevious
+} from "@/components/ui/pagination";
 
 export default async function Page() {
   const posts = await getPosts();
@@ -62,6 +69,24 @@ export default async function Page() {
             ))
           }
         </section>
+
+        {/* pagination */}
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious href="#"/>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">1</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationEllipsis/>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext href="#"/>
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </section>
   )
 }

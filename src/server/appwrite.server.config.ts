@@ -2,6 +2,7 @@
 
 import * as sdk from "node-appwrite";
 import {revalidatePath} from "next/cache";
+import {Query} from "node-appwrite";
 
 const client = new sdk.Client();
 
@@ -25,7 +26,10 @@ async function getPosts() {
   let posts = await databases.listDocuments(
       process.env.APPWRITE_DATABASE_ID,
       process.env.APPWRITE_COLLECTION_ID,
-      [],
+      [
+        Query.limit(25),
+        Query.offset(0)
+      ]
   );
 
   return posts.documents;
@@ -39,7 +43,7 @@ async function getPost(id: string) {
   return await databases.getDocument(
       process.env.APPWRITE_DATABASE_ID,
       process.env.APPWRITE_COLLECTION_ID,
-      id,
+      id
   );
 }
 
