@@ -3,15 +3,16 @@
 import {FieldValues, useForm} from "react-hook-form";
 import {Progress} from "@/components/ui/progress";
 import {Tabs, TabsContent} from "@/components/ui/tabs";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {cn} from "@/lib/utils";
-import {redirect} from "next/navigation";
+import {redirect, useRouter} from "next/navigation";
 import {useToast} from "@/components/ui/use-toast";
 import {uploadFile} from "@/server/bucket/bucket.action";
 import {addPost} from "@/server/appwrite.server.config";
 import Image from "next/image";
+import {account} from "@/utils/appwrite/appwrite.config";
 
 interface FormField {
   name: string;
@@ -65,6 +66,7 @@ export default function Page() {
     getValues,
   } = useForm();
   const {toast} = useToast()
+  const router = useRouter()
 
   const [progress, setProgress] = useState(0);
   const [currentTab, setCurrentTab] = useState(0);
@@ -114,12 +116,15 @@ export default function Page() {
         <Tabs
             value={ProgressPage[progress].name}
         >
-          <Progress value={(progress + 1) * 100 / ProgressPage.length}/>
+          <Progress
+              value={(progress + 1) * 100 / ProgressPage.length}
+              className={cn(`text-primary`)}
+          />
 
           {
             ProgressPage.map((page) => (
                 <TabsContent
-                    className={cn(`flex flex-col gap-4 w-[600px] py-2`)}
+                    className={cn(`flex flex-col gap-4 lg:w-[600px] py-2`)}
                     key={page.id}
                     value={page.name}
                 >
@@ -156,7 +161,7 @@ export default function Page() {
           }
 
           <div
-              className={cn(`flex gap-3 `)}
+              className={cn(`flex gap-3 justify-between`)}
           >
 
             <Button

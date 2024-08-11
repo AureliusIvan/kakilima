@@ -1,5 +1,5 @@
 import React from "react";
-import {Navbar} from "@/components/layout/navbar";
+import {Navbar} from "@/components/layout/navbar/navbar";
 import {Footer} from "@/components/layout/footer";
 
 export default function DetailLayout(

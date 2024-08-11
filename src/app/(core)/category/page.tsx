@@ -23,7 +23,7 @@ export default async function Page() {
   return (
       <section>
         <section
-            className={cn(` grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-4`)}
+            className={cn(` grid grid-cols-2 md:grid-cols-2 lg:grid-cols-8 gap-4`)}
         >
           {
             posts.map((post, index) => (
@@ -49,7 +49,9 @@ export default async function Page() {
                           />
                       )
                       }
-                      <CardTitle>
+                      <CardTitle
+                          className={cn(`text-lg capitalize`)}
+                      >
                         {post.name}
                       </CardTitle>
                     </CardHeader>

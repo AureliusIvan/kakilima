@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import {IoMdArrowBack} from "react-icons/io";
 import {buttonVariants} from "@/components/ui/button";
+import {cn} from "@/lib/utils";
 
 export default async function AddLayout(
     {
@@ -12,7 +13,7 @@ export default async function AddLayout(
 ) {
   return (
       <section
-          className={`p-6`}
+          className={cn(`p-6`)}
       >
         <header
             className={'flex gap-2 items-center mb-4'}
@@ -24,7 +25,7 @@ export default async function AddLayout(
           </Link>
 
           <h1>
-            Add new Kakilima store
+            Add new KakiLima store
           </h1>
         </header>
 
@@ -33,6 +34,7 @@ export default async function AddLayout(
         >
           {children}
         </div>
+
       </section>
   )
 }

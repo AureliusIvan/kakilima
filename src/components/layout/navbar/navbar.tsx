@@ -8,6 +8,8 @@ import {AiOutlineGlobal} from "react-icons/ai";
 import {cn} from "@/lib/utils";
 import {Input} from "@/components/ui/input";
 import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area";
+import {account} from "@/utils/appwrite/appwrite.config";
+import {NavbarProfile, SearchBar} from "@/components/layout/navbar/navbar.client";
 
 export type Route = {
   name: string;
@@ -48,29 +50,29 @@ async function Navbar() {
       <>
         {/* top section */}
         <section
-            className={`flex justify-between bg-primary p-6
+            className={`
+            flex justify-between items-center
+            bg-primary p-6
             shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]
             `}
         >
           <Link
-              className={'text-center text-4xl font-bold flex'}
+              className={'text-center font-bold flex items-center space-x-2 justify-center'}
               href={'/'}
           >
-            <span>
-            🥘
+            <span className={cn(`text-3xl`)}>
+              🥘
             </span>
-            <span className={`md:block hidden text-white`}>
-            KakiLima
-          </span>
+            <span className={`md:block hidden text-white text-xl text-left`}>
+              Kaki
+              <br/>
+              Lima
+            </span>
 
           </Link>
 
-          <section>
-            <Input
-                placeholder={'Search your favorite store'}
-                type={'search'}
-            />
-
+          <section className={`relative w-full flex justify-center items-center`}>
+            <SearchBar/>
           </section>
 
 
@@ -84,14 +86,7 @@ async function Navbar() {
               Add Store
             </Link>
 
-            <Link
-                href={'/login'}>
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png"/>
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </Link>
-
+            <NavbarProfile/>
           </section>
         </section>
       </>
@@ -102,7 +97,7 @@ async function CategoryMenu() {
   return (
       <ScrollArea
           className={'w-full whitespace-nowrap rounded-md border'}>
-        <section className={cn(`flex w-full space-x-3 p-6`)}>
+        <section className={cn(`flex w-full space-x-3 p-6 justify-center`)}>
           {RouteMapComponent(RouteList)}
         </section>
         <ScrollBar orientation="horizontal"/>
@@ -119,10 +114,12 @@ function RouteMapComponent(route: Route[]) {
               <Link
                   className={
                     cn(
-                        `transition duration-300 ease-in-out
+                        `
+                        w-[100px] h-[100px]
+                        transition duration-300 ease-in-out
                     bg-gray-200 hover:bg-gray-300
                     flex flex-col justify-center items-center
-                    text-gray-700 hover:text-black font-bold p-2 rounded-lg w-full
+                    text-gray-700 hover:text-black font-bold p-2 rounded-lg 
                     shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px]
                     `,
                     )

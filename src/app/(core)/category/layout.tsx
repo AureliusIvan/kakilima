@@ -1,4 +1,4 @@
-import {CategoryMenu} from "@/components/layout/navbar";
+import {CategoryMenu} from "@/components/layout/navbar/navbar";
 import React from "react";
 
 export default async function DetailLayout(

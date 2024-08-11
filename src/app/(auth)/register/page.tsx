@@ -1,25 +1,20 @@
 "use client";
 
-import Link from "next/link";
 import {account} from "@/utils/appwrite/appwrite.config";
+import Link from "next/link";
 import {useForm} from "react-hook-form";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {OAuthProvider} from "appwrite";
 import {FaGithub, FaGoogle} from "react-icons/fa";
 import {cn} from "@/lib/utils";
-import {login} from "@/app/(auth)/login/login.action";
-import {useRouter} from "next/navigation";
-import {useEffect} from "react";
+import {User} from "@/interface/user";
+import {registerNewUser} from "@/app/(auth)/register/register.action";
 
-interface User {
-  email: string;
-  password: string;
-}
-
-const LoginPage = () => {
+const RegisterPage = () => {
   // TODO: can we use this to redirect to the previous page?
-  const router = useRouter();
+  // const params = useParams<{ tag: string; item: string }>()
+
   const {
     register,
     handleSubmit,
@@ -28,10 +23,9 @@ const LoginPage = () => {
 
   const onSubmit = async (data: any) => {
     try {
-      // then create a new session
-      const loginData = await account.createEmailPasswordSession(data.email, data.password);
-      // navigate to the home page
-      router.push('/');
+      console.log(data);
+      const result = await registerNewUser(data as User);
+      console.log(result);
     } catch (error) {
       console.error(error);
     }
@@ -65,6 +59,7 @@ const LoginPage = () => {
     }
   }
 
+
   return (
       <form
           onSubmit={handleSubmit(onSubmit)}
@@ -83,12 +78,19 @@ const LoginPage = () => {
           <h2
               className={`text-2xl font-bold`}
           >
-            Welcome! 🥘
+            Hello there!
           </h2>
 
           <p>
-            Let&#39;s get you logged in.
+            Welcome to the community!
           </p>
+
+          <Input
+              type="text"
+              placeholder="Name"
+              {...register("name", {required: true})}
+          />
+
 
           <Input
               type="email"
@@ -130,7 +132,7 @@ const LoginPage = () => {
           <div
               className={"flex flex-row gap-2"}
           >
-            First time here? <Link href={"/register"}>Register</Link>
+            Already have an account? <Link href={"/login"}>Login</Link>
           </div>
         </section>
 
@@ -138,4 +140,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
