@@ -1,6 +1,7 @@
 "use server";
 
 import * as sdk from "node-appwrite";
+import {revalidatePath} from "next/cache";
 
 const client = new sdk.Client();
 
@@ -16,7 +17,7 @@ client
 
 const databases = new sdk.Databases(client);
 
-async function getPost() {
+async function getPosts() {
   if (!process.env.APPWRITE_DATABASE_ID || !process.env.APPWRITE_COLLECTION_ID) {
     throw new Error("Please set the APPWRITE_DATABASE_ID and APPWRITE_COLLECTION_ID env variables");
   }
@@ -30,17 +31,36 @@ async function getPost() {
   return posts.documents;
 }
 
+async function getPost(id: string) {
+  if (!process.env.APPWRITE_DATABASE_ID || !process.env.APPWRITE_COLLECTION_ID) {
+    throw new Error("Please set the APPWRITE_DATABASE_ID and APPWRITE_COLLECTION_ID env variables");
+  }
+
+  return await databases.getDocument(
+      process.env.APPWRITE_DATABASE_ID,
+      process.env.APPWRITE_COLLECTION_ID,
+      id,
+  );
+}
+
+
 async function addPost(data: any) {
   if (!process.env.APPWRITE_COLLECTION_ID || !process.env.APPWRITE_DATABASE_ID) {
     throw new Error("Please set the APPWRITE_COLLECTION_ID and APPWRITE_DATABASE_ID env variables");
   }
 
-  return await databases.createDocument(
+  await databases.createDocument(
       process.env.APPWRITE_DATABASE_ID,
       process.env.APPWRITE_COLLECTION_ID,
       sdk.ID.unique(),
       data,
   );
+  revalidatePath('/category');
+  return;
 }
 
-export {getPost, addPost};
+export {
+  getPosts,
+  getPost,
+  addPost
+};
