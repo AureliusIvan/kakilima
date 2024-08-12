@@ -8,14 +8,7 @@ import {Input} from "@/components/ui/input";
 import {OAuthProvider} from "appwrite";
 import {FaGithub, FaGoogle} from "react-icons/fa";
 import {cn} from "@/lib/utils";
-import {login} from "@/app/(auth)/login/login.action";
 import {useRouter} from "next/navigation";
-import {useEffect} from "react";
-
-interface User {
-  email: string;
-  password: string;
-}
 
 const LoginPage = () => {
   // TODO: can we use this to redirect to the previous page?
