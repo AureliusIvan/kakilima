@@ -29,7 +29,7 @@
     "@uidotdev/usehooks": "^2.4.1",
     "@vis.gl/react-google-maps": "^1.1.0",
     "algoliasearch": "^5.0.0",
-    "appwrite": "^15.0.0",
+    "appwrite": "^16.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
