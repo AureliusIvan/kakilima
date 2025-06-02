@@ -87,24 +87,52 @@ export default function Page() {
 
   const onSubmit = async (data: FieldValues) => {
     try {
-      const res = await uploadFile(data.image[0])
-      const image = res["$id"]
+      const imageFile = data.image[0] as File;
+      if (!imageFile) {
+        toast({
+          title: 'Error',
+          description: 'Please select an image for the store.',
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      const formDataPayload = new FormData();
+      formDataPayload.append('file', imageFile);
+
+      // uploadFile is now uploadFileToS3 and expects FormData
+      const res = await uploadFile(formDataPayload);
+
+      if (!res || !res.success || !res.url) {
+        toast({
+          title: 'Error',
+          description: `Failed to upload image: ${res?.error || 'Unknown error'}`,
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      const imageUrl = res.url; // Use the S3 URL
       const store = {
         name: data.name,
         location: data.location,
-        image: image,
-      }
-      await addPost(store)
+        image: imageUrl, // Store the S3 URL
+      };
+
+      await addPost(store);
       toast({
         title: 'Success',
         description: 'Store added successfully',
-      })
-    } catch (e) {
-      console.error(e)
+      });
+      // Optionally, redirect or reset the form
+      // router.push('/');
+    } catch (e: any) { // Added type any for error object
+      console.error(e);
       toast({
         title: 'Error',
-        description: 'Failed to add store',
-      })
+        description: e.message || 'Failed to add store', // Use e.message if available
+        variant: 'destructive',
+      });
     }
   }
 

@@ -6,21 +6,46 @@ import {Query} from "node-appwrite";
 
 const client = new sdk.Client();
 
-if (!process.env.APPWRITE_API_KEY || !process.env.APPWRITE_ENDPOINT || !process.env.APPWRITE_PROJECT_ID) {
-  throw new Error("Please set the APPWRITE_API_KEY, APPWRITE_ENDPOINT and APPWRITE_PROJECT_ID env variables");
+// Determine if we are in a build phase
+const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
+
+if (!isBuildPhase && (!process.env.APPWRITE_API_KEY || !process.env.APPWRITE_ENDPOINT || !process.env.APPWRITE_PROJECT_ID)) {
+  // Only throw an error if not in build phase and env vars are missing
+  throw new Error("Runtime Error: APPWRITE_API_KEY, APPWRITE_ENDPOINT, and APPWRITE_PROJECT_ID must be set.");
 }
 
-client
+// Conditionally initialize client if variables are present (or if it's build phase, allow it to be uninitialized)
+if (process.env.APPWRITE_ENDPOINT && process.env.APPWRITE_PROJECT_ID && process.env.APPWRITE_API_KEY) {
+  client
     .setEndpoint(process.env.APPWRITE_ENDPOINT) // Your API Endpoint
     .setProject(process.env.APPWRITE_PROJECT_ID) // Your project ID
     .setKey(process.env.APPWRITE_API_KEY) // Your secret API key
-;
+  ;
+} else if (!isBuildPhase) {
+  // If not in build phase and variables are still missing (e.g. one is missing), it's an issue.
+  // This case might be redundant due to the check above but added for clarity.
+  console.warn("Runtime Warning: Appwrite client could not be fully configured due to missing environment variables.");
+}
+
 
 const databases = new sdk.Databases(client);
+// Note: Functions using 'databases' might fail if called during build and client is not configured.
+// Further modifications within getPosts, getPost, addPost might be needed if they are called during build.
 
 async function getPosts() {
+  const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
   if (!process.env.APPWRITE_DATABASE_ID || !process.env.APPWRITE_COLLECTION_ID) {
-    throw new Error("Please set the APPWRITE_DATABASE_ID and APPWRITE_COLLECTION_ID env variables");
+    if (!isBuildPhase) {
+      throw new Error("Runtime Error: APPWRITE_DATABASE_ID and APPWRITE_COLLECTION_ID must be set.");
+    }
+    console.warn("Build Warning: APPWRITE_DATABASE_ID or APPWRITE_COLLECTION_ID not set for getPosts. Returning empty array.");
+    return []; // Return empty array during build if IDs are missing
+  }
+
+  // Also, ensure client is somewhat configured before attempting to list documents
+  if (!client.config.project && isBuildPhase) {
+      console.warn("Build Warning: Appwrite client not configured for getPosts. Returning empty array.");
+      return [];
   }
 
   let posts = await databases.listDocuments(
@@ -36,8 +61,18 @@ async function getPosts() {
 }
 
 async function getPost(id: string) {
+  const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
   if (!process.env.APPWRITE_DATABASE_ID || !process.env.APPWRITE_COLLECTION_ID) {
-    throw new Error("Please set the APPWRITE_DATABASE_ID and APPWRITE_COLLECTION_ID env variables");
+    if (!isBuildPhase) {
+      throw new Error("Runtime Error: APPWRITE_DATABASE_ID and APPWRITE_COLLECTION_ID must be set for getPost.");
+    }
+    console.warn(`Build Warning: APPWRITE_DATABASE_ID or APPWRITE_COLLECTION_ID not set for getPost(id: ${id}). Returning null.`);
+    return null; // Return null or appropriate mock during build
+  }
+
+  if (!client.config.project && isBuildPhase) {
+      console.warn(`Build Warning: Appwrite client not configured for getPost(id: ${id}). Returning null.`);
+      return null;
   }
 
   return await databases.getDocument(

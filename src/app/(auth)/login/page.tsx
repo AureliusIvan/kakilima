@@ -9,10 +9,12 @@ import {OAuthProvider} from "appwrite";
 import {FaGithub, FaGoogle} from "react-icons/fa";
 import {cn} from "@/lib/utils";
 import {useRouter} from "next/navigation";
+import {useToast} from "@/components/ui/use-toast";
 
 const LoginPage = () => {
   // TODO: can we use this to redirect to the previous page?
   const router = useRouter();
+  const {toast} = useToast();
   const {
     register,
     handleSubmit,
@@ -25,8 +27,10 @@ const LoginPage = () => {
       const loginData = await account.createEmailPasswordSession(data.email, data.password);
       // navigate to the home page
       router.push('/');
-    } catch (error) {
+      toast({title: "Success", description: "Logged in successfully!"});
+    } catch (error: any) {
       console.error(error);
+      toast({title: "Login Failed", description: error.message || "An unexpected error occurred.", variant: "destructive"});
     }
   }
 
@@ -39,8 +43,9 @@ const LoginPage = () => {
           ['repo', 'user']
       )
       console.log("Logged in");
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      toast({title: "Login Failed", description: error.message || "An unexpected error occurred.", variant: "destructive"});
     }
   }
 
@@ -53,8 +58,9 @@ const LoginPage = () => {
           ['profile', 'email']
       )
       console.log("Logged in");
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      toast({title: "Login Failed", description: error.message || "An unexpected error occurred.", variant: "destructive"});
     }
   }
 
@@ -95,6 +101,13 @@ const LoginPage = () => {
               {...register("password", {required: true})}
           />
 
+          <div className="text-sm text-right">
+            <Link href="/forgot-password" legacyBehavior>
+              <a className="font-medium text-blue-600 hover:text-blue-500">
+                Forgot password?
+              </a>
+            </Link>
+          </div>
 
           <Button
               type="submit"

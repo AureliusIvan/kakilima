@@ -5,9 +5,19 @@ import {cn} from "@/lib/utils";
 
 export default function Home() {
   const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
 
   if (!API_KEY) {
-    throw new Error("Please set the NEXT_PUBLIC_GOOGLE_MAPS_API_KEY env variable");
+    if (isBuildPhase) {
+      return (
+          <div className="p-6 text-center">
+            <p>Google Maps component is unavailable during build or API key is missing.</p>
+            <p>Please ensure NEXT_PUBLIC_GOOGLE_MAPS_API_KEY is set for runtime.</p>
+          </div>
+      );
+    }
+    // If not in build phase, it's a runtime error if the key is missing
+    throw new Error("Runtime Error: NEXT_PUBLIC_GOOGLE_MAPS_API_KEY is not set.");
   }
 
   return (

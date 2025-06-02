@@ -10,10 +10,12 @@ import {FaGithub, FaGoogle} from "react-icons/fa";
 import {cn} from "@/lib/utils";
 import {User} from "@/interface/user";
 import {registerNewUser} from "@/app/(auth)/register/register.action";
+import {useToast} from "@/components/ui/use-toast";
 
 const RegisterPage = () => {
   // TODO: can we use this to redirect to the previous page?
   // const params = useParams<{ tag: string; item: string }>()
+  const {toast} = useToast();
 
   const {
     register,
@@ -26,8 +28,10 @@ const RegisterPage = () => {
       console.log(data);
       const result = await registerNewUser(data as User);
       console.log(result);
-    } catch (error) {
+      toast({title: "Registration Successful", description: "Please check your email to verify your account."});
+    } catch (error: any) {
       console.error(error);
+      toast({title: "Registration Failed", description: error.message || "An unexpected error occurred.", variant: "destructive"});
     }
   }
 
@@ -40,8 +44,9 @@ const RegisterPage = () => {
           ['repo', 'user']
       )
       console.log("Logged in");
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      toast({title: "Registration Failed", description: error.message || "An unexpected error occurred.", variant: "destructive"});
     }
   }
 
@@ -54,8 +59,9 @@ const RegisterPage = () => {
           ['profile', 'email']
       )
       console.log("Logged in");
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      toast({title: "Registration Failed", description: error.message || "An unexpected error occurred.", variant: "destructive"});
     }
   }
 
