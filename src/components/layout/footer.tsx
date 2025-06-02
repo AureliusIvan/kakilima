@@ -11,7 +11,7 @@ import {buttonVariants} from "@/components/ui/button";
 async function Footer() {
   return (
       <section
-          className={`bg-primary p-6 flex flex-row justify-center items-center gap-2`}
+          className={`bg-primary p-4 sm:p-6 flex flex-row justify-center items-center gap-2`}
       >
         {/* Footer */}
         <Link

@@ -1,5 +1,5 @@
 import React from "react";
-import {Navbar} from "@/components/layout/navbar/navbar";
+import {Navbar, CategoryMenu} from "@/components/layout/navbar/navbar"; // Added CategoryMenu
 import {Footer} from "@/components/layout/footer";
 
 export default function DetailLayout(
@@ -12,11 +12,12 @@ export default function DetailLayout(
   return (
       <>
         <Navbar/>
-        <section
-            className={`min-h-screen`}
+        <CategoryMenu />
+        <main
+            className={`min-h-screen px-4 py-6 sm:px-6 lg:px-8`}
         >
           {children}
-        </section>
+        </main>
         <Footer/>
       </>
   )

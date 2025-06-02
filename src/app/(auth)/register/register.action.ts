@@ -29,6 +29,8 @@ const registerNewUser = async (data: User) => {
         data.password,
         data.name
     );
+    // After successfully creating the user, send a verification email
+    await account.createVerification(`${process.env.NEXT_PUBLIC_APP_URL}/verify-email`);
   } catch (error) {
     console.error(error);
     throw new Error("Failed to register new user");
