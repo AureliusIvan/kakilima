@@ -34,6 +34,62 @@ const databases = new sdk.Databases(client);
 
 async function getPosts() {
   const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
+  
+  // If using dummy data (development mode), return mock posts
+  if (process.env.APPWRITE_ENDPOINT === 'https://dummy.endpoint.com') {
+    console.log("Using mock data for development");
+    return [
+      {
+        $id: "1",
+        name: "Nasi Gudeg Bu Sari",
+        location: "Jl. Malioboro No. 123, Yogyakarta",
+        image: null,
+        category: "meals",
+        description: "Authentic Javanese gudeg with tender jackfruit"
+      },
+      {
+        $id: "2", 
+        name: "Bakso Malang Pak Harto",
+        location: "Jl. Veteran No. 45, Malang",
+        image: null,
+        category: "meals",
+        description: "Famous Malang-style meatball soup"
+      },
+      {
+        $id: "3",
+        name: "Es Cendol Mbak Ita",
+        location: "Jl. Pemuda No. 67, Surabaya", 
+        image: null,
+        category: "beverages",
+        description: "Refreshing traditional cendol with coconut milk"
+      },
+      {
+        $id: "4",
+        name: "Sate Ayam Madura",
+        location: "Jl. Diponegoro No. 89, Jakarta",
+        image: null,
+        category: "meals",
+        description: "Authentic Madura chicken satay with peanut sauce"
+      },
+      {
+        $id: "5",
+        name: "Kerak Telor Betawi",
+        location: "Jl. Kebon Jeruk No. 12, Jakarta",
+        image: null,
+        category: "snack",
+        description: "Traditional Betawi spiced rice crust"
+      },
+      {
+        $id: "6",
+        name: "Rujak Buah Segar",
+        location: "Jl. Raya Pantai No. 34, Bali",
+        image: null,
+        category: "snack",
+        description: "Fresh fruit salad with spicy palm sugar dressing"
+      }
+    ];
+  }
+  
   if (!process.env.APPWRITE_DATABASE_ID || !process.env.APPWRITE_COLLECTION_ID) {
     if (!isBuildPhase) {
       throw new Error("Runtime Error: APPWRITE_DATABASE_ID and APPWRITE_COLLECTION_ID must be set.");
